@@ -1,6 +1,4 @@
 <?php
-//session_start(); // Start the session
-
 // Include your database connection file (connect.php)
 include('connect.php');
 
@@ -20,34 +18,95 @@ if (!isset($_SESSION['uid'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Booking</title>
 
-    <!-- Include your existing head content here -->
+    <!-- Include your existing head content here , ok now i have included it on 080-10-1 -->
+     <!-- Favicons -->
+<link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
 
     <style>
-        /* Your existing styles */
-        .seat {
-            width: 30px;
-            height: 30px;
-            margin: 5px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+    /* Your existing styles */
+    .seat {
+        width: 30px;
+        height: 30px;
+        margin: 5px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .seat.selected {
-            background-color: #5cb85c; /* Green for selected seats */
+    .seat.selected {
+        background-color: #5cb85c; /* Green for selected seats */
+        color: #fff;
+    }
+
+    .seat-chart-row {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center; /* Center the seats horizontally in the row */
+    }
+
+    .btn-primary {
+        margin-top: 10px;
+        background-color: #007bff;
             color: #fff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+    }
+    .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
         }
 
-        .seat-chart-row {
-            margin-bottom: 10px;
+        form {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
         }
 
-        .btn-primary {
-            margin-top: 10px;
+        form label {
+            font-weight: bold;
         }
-    </style>
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 20px 10px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        select.form-control {
+            width: 100%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+</style>
+
 </head>
 
 <body>
@@ -57,13 +116,14 @@ if (!isset($_SESSION['uid'])) {
     ?>
 
     <section id="team" class="team section-bg">
-        <div class="container aos-init aos-animate" data-aos="fade-up">
+        <!--div class="container aos-init aos-animate" data-aos="fade-up" -->
+        <div class="container aos-init aos-animate border border-dark rounded p-4" data-aos="fade-up">
 
             <div class="section-title">
                 <h2>Ticket Booking for Theater</h2>
             </div>
 
-            <div class="row">
+            <div class="row justify-content-center">
 
                 <div class="col-lg-3 col-md-6 d-flex align-items-stretch aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
                     <form action="booking_process.php" method="post">
@@ -170,6 +230,7 @@ if (!isset($_SESSION['uid'])) {
         // Ensure $con is defined (from your connect.php file)
         if (!isset($con)) {
             echo "<script> alert('Database connection error'); </script>";
+           
             exit; // Stop further execution
         }
 
