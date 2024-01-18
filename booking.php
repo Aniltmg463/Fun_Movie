@@ -18,7 +18,6 @@ if (!isset($_SESSION['uid'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Booking</title>
 
-    <!-- Include your existing head content here , ok now i have included it on 080-10-1 -->
      <!-- Favicons -->
 <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -218,24 +217,28 @@ if (!isset($_SESSION['uid'])) {
 
     <?php
 
-    if (isset($_POST['ticketbook'])) {
+if (isset($_POST['ticketbook'])) {
+    $person = $_POST['person'];
+    $date = $_POST['date'];
+    $theaterid = $_POST['theaterid'];
+    $seat = $_POST['seat'];
 
-        $person = $_POST['person'];
-        $date = $_POST['date'];
-        $theaterid = $_POST['theaterid'];
-        $seat = $_POST['seat'];
+    $uid = $_SESSION['uid'];
 
-        $uid = $_SESSION['uid'];
+    // Ensure $con is defined (from your connect.php file)
+    if (!isset($con)) {
+        echo "<script> alert('Database connection error'); </script>";
+        exit; // Stop further execution
+    }
 
-        // Ensure $con is defined (from your connect.php file)
-        if (!isset($con)) {
-            echo "<script> alert('Database connection error'); </script>";
-           
-            exit; // Stop further execution
-        }
+    // Check if the seat is available
+    $seatAvailabilitySql = "SELECT * FROM `booking` WHERE `theaterid`='$theaterid' AND `bookingdate`='$date' AND `seat`='$seat'";
+    $seatAvailabilityResult = mysqli_query($con, $seatAvailabilitySql);
 
-        //print_r($_POST);
-
+    if (mysqli_num_rows($seatAvailabilityResult) > 0) {
+        echo "<script> alert('Seat already booked. Please choose another seat.'); </script>";
+    } else {
+        // Book the seat
         $sql = "INSERT INTO `booking`(`theaterid`, `bookingdate`, `person`, `seat`, `userid`) VALUES ('$theaterid','$date','$person','$seat','$uid')";
 
         if (mysqli_query($con, $sql)) {
@@ -245,8 +248,8 @@ if (!isset($_SESSION['uid'])) {
             echo "<script> alert('Ticket not booked'); </script>";
         }
     }
-
-    ?>
+}
+?>
 
 </body>
 

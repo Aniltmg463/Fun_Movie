@@ -3,6 +3,7 @@ include('../connect.php');
 
 if(!isset($_SESSION['uid'])){
   echo "<script> window.location.href='../login.php';  </script>";
+  exit(); // Stop executing further code
 }
 
 ?>
@@ -151,8 +152,11 @@ if(!isset($_SESSION['uid'])){
                   <?php
                   if($data['status'] == 1){
                     echo "<button type='button' class='btn btn-light' disabled> Completed </button>";
+                    echo "<a href='viewallbooking.php?editbookingid=".$data['bookingid']."' class='btn btn-warning'> Edit</a>";
+                    echo "<a href='viewallbooking.php?deletebookingid=".$data['bookingid']."' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete this booking?\")'> Delete</a>";
                   }else{
                     echo "<a href='viewallbooking.php?bookingid=".$data['bookingid']."' class='btn btn-primary'> Approve</a>";
+                    echo "<a href='viewallbooking.php?editbookingid=".$data['bookingid']."' class='btn btn-warning'> Edit</a>";
                     echo "<a href='viewallbooking.php?deletebookingid=".$data['bookingid']."' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete this booking?\")'> Delete</a>";
                   }
                   ?>
@@ -186,6 +190,31 @@ if(isset($_GET['bookingid'])){
     echo "<script> alert('Not approved successfully!!') </script>";
   }
 }
+
+
+if(isset($_GET['editbookingid'])){
+  $editBookingId = $_GET['editbookingid'];
+
+  // Fetch the existing booking details from the database based on $editBookingId
+  $editSql = "SELECT * FROM `booking` WHERE bookingid = '$editBookingId'";
+  $editResult = mysqli_query($con, $editSql);
+
+  if($editResult && mysqli_num_rows($editResult) > 0){
+    $editData = mysqli_fetch_array($editResult);
+
+    // Assuming you have an editbooking.php page for handling edits
+    // You can pass the booking details as URL parameters
+    $editUrl = "editbooking.php?editbookingid=".$editBookingId."&name=".$editData['name']."&other_field=".$editData['other_field'];
+
+    // Redirect to the editbooking.php page with the booking details
+    echo "<script> window.location.href='$editUrl'; </script>";
+  } else {
+    // Handle error if the booking details are not found
+    echo "<script> alert('Booking details not found for editing.'); </script>";
+  }
+}
+
+
 
 if(isset($_GET['deletebookingid'])){
   $deleteBookingId = $_GET['deletebookingid'];

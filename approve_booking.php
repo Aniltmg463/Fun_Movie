@@ -2,6 +2,9 @@
 include('connect.php');
 include('generate_bill.php');
 
+// Ensure that FPDF library is included with the correct path
+require_once('./fpdf/fpdf.php'); // Adjust the path based on your project structure
+
 if(isset($_GET['bookingid'])){
     $bookingid = $_GET['bookingid'];
 
@@ -23,16 +26,30 @@ if(isset($_GET['bookingid'])){
         if(mysqli_num_rows($bookingDetailsResult) > 0){
             $bookingDetails = mysqli_fetch_assoc($bookingDetailsResult);
 
-            // Generate and display the bill
+            // Generate the bill
             $bill = generateBill($bookingDetails['bookingid'], $bookingDetails['title'], $bookingDetails['catname'], $bookingDetails['days'], $bookingDetails['timing'], $bookingDetails['price'], $bookingDetails['bookingdate'], $bookingDetails['location'], $bookingDetails['username']);
-            echo $bill;
 
-            // You can add any additional actions after generating the bill if needed
+            // Create PDF using FPDF
+            $pdf = new FPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', 'B', 16);
+            $pdf->Cell(0, 10, 'Booking Bill', 0, 1, 'C');
+            $pdf->Ln(10);
+            $pdf->MultiCell(0, 10, $bill);
+
+            // Display PDF on the webpage
+            echo '<iframe src="data:application/pdf;base64,' . base64_encode($pdf->Output('S')) . '" width="100%" height="600px"></iframe>';
+
+            // Add a download button
+            echo '<a href="download.php?bookingid=' . $bookingid . '" target="_blank" download="Booking_Bill_' . $bookingid . '.pdf">Download Bill</a>';
+
+            // Optionally, you can add further actions after generating the PDF if needed
+
         } else {
             echo "Error fetching booking details.";
         }
     } else {
-        echo "Invalid booking ID or booking is not approved.";
+        echo "Booking is not approved.";
     }
 } else {
     echo "Invalid request.";
