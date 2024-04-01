@@ -1,0 +1,100 @@
+//classes.php succes 1
+
+
+<?php
+include('../connect.php');
+?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Data</title>
+
+    <style>
+      .container {
+  width: 50%;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px; /* Add some space between the container and the table */
+}
+
+table td, table th {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+
+
+.link-buttons {
+  display: flex;
+}
+
+.link-buttons a {
+  margin-right: 10px; /* Adjust spacing between buttons as needed */
+}
+
+/* Optional: Style links as buttons */
+.link-buttons a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; /* Button background color */
+  color: #fff; /* Button text color */
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.link-buttons a:hover {
+  background-color: #0056b3; /* Button background color on hover */
+}
+
+
+      </style>
+  </head>
+  <body>
+
+  
+  <div class="container">
+
+    <table border = 1 cellspacing = 0 cellpadding = 10>
+      <tr>
+        <td>#</td>
+        <td>Name</td>
+        <td>Image</td>
+      </tr>
+      <?php
+      $i = 1;
+      $rows = mysqli_query($con, "SELECT * FROM tb_upload ORDER BY id DESC")
+      ?>
+
+      <?php foreach ($rows as $row) : ?>
+      <tr>
+        <td><?php echo $i++; ?></td>
+        <td><?php echo $row["name"]; ?></td>
+        <td> <img src="../img/<?php echo $row["image"]; ?>" width = 200 title="<?php echo $row['image']; ?>"> </td>
+      </tr>
+      <?php endforeach; ?>
+    </table>
+    <br>
+    <div class="link-buttons">
+  <a href="cash_payment.php">Upload Image File</a>
+  <a href="dashboard.php">Go To Dashboard</a>
+</div>
+
+    <!--button onclick="window.location.href='cash_payment.php'" class="link-button">Upload Image File</button>
+<button onclick="window.location.href='dashboard.php'" class="link-button">Go To Dashboard</button -->
+
+
+    </div>
+  </body>
+</html>

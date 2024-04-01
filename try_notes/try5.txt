@@ -1,3 +1,7 @@
+//try5
+
+
+
 <?php 
 include('../connect.php');
 
@@ -58,7 +62,7 @@ if(!isset($_SESSION['uid'])){
           <th>Total Price</th>
           <th>Booking Date</th>
           <th>User</th>
-          
+          <th>Image</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -71,11 +75,12 @@ if(!isset($_SESSION['uid'])){
   
           $total_sale = 0;
   
-          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.image_path, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
+          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname, tb_upload.image
           FROM booking
           INNER JOIN users ON users.userid = booking.user_id
           INNER JOIN movies ON movies.movieid = booking.movie_id
           INNER JOIN categories ON categories.catid = movies.catid
+          INNER JOIN tb_upload ON tb_upload.id = booking.bookingid
           WHERE booking.show_date BETWEEN '$start' AND '$end' AND booking.status = '$status'";
           $res  = mysqli_query($con, $sql);
           if(mysqli_num_rows($res) > 0){
@@ -94,7 +99,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image'])): ?>
+                        <img src="../img/<?= $data['image'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
@@ -123,11 +134,12 @@ if(!isset($_SESSION['uid'])){
             echo "<tr> <td>Total Sale: <strong> Rs.".$total_sale." </strong></td> </tr>";
           }
         }else{
-          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.image_path, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
+          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname, tb_upload.image
           FROM booking
           INNER JOIN users ON users.userid = booking.user_id
           INNER JOIN movies ON movies.movieid = booking.movie_id
-          INNER JOIN categories ON categories.catid = movies.catid";
+          INNER JOIN categories ON categories.catid = movies.catid
+          INNER JOIN tb_upload ON tb_upload.id = booking.bookingid";
           $res  = mysqli_query($con, $sql);
           if(mysqli_num_rows($res) > 0){
             while($data = mysqli_fetch_array($res)){
@@ -143,7 +155,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image'])): ?>
+                        <img src="../img/<?= $data['image'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
@@ -169,8 +187,6 @@ if(!isset($_SESSION['uid'])){
               </tr>
               <?php
             }
-          }else{
-            echo 'No booking found';
           }
         }
         ?>
@@ -183,52 +199,3 @@ if(!isset($_SESSION['uid'])){
 
 </body>
 </html>
-
-<?php
-if(isset($_GET['bookingid'])){
-  $bookingid  = $_GET['bookingid'];
-  $sql = "UPDATE `booking` SET `status`= 'Approved' WHERE bookingid = '$bookingid'";
-  if(mysqli_query($con,$sql)){
-    echo "<script> alert('Booking approved successfully!!') </script>";
-    echo "<script> window.location.href='viewallbooking.php';  </script>";
-  }else{
-    echo "<script> alert('Not approved successfully!!') </script>";
-  }
-}
-
-
-if(isset($_GET['editbookingid'])){
-  $editBookingId = $_GET['editbookingid'];
-
-  // Fetch the existing booking details from the database based on $editBookingId
-  $editSql = "SELECT * FROM `booking` WHERE bookingid = '$editBookingId'";
-  $editResult = mysqli_query($con, $editSql);
-
-  if($editResult && mysqli_num_rows($editResult) > 0){
-    $editData = mysqli_fetch_array($editResult);
-
-    // Assuming you have an editbooking.php page for handling edits
-    // You can pass the booking details as URL parameters
-    $editUrl = "editbooking.php?editbookingid=".$editBookingId."&name=".$editData['name']."&other_field=".$editData['other_field'];
-
-    // Redirect to the editbooking.php page with the booking details
-    echo "<script> window.location.href='$editUrl'; </script>";
-  } else {
-    // Handle error if the booking details are not found
-    echo "<script> alert('Booking details not found for editing.'); </script>";
-  }
-}
-
-
-
-if(isset($_GET['deletebookingid'])){
-  $deleteBookingId = $_GET['deletebookingid'];
-  $deleteSql = "DELETE FROM `booking` WHERE bookingid = '$deleteBookingId'";
-  if(mysqli_query($con, $deleteSql)){
-    echo "<script> alert('Booking deleted successfully!!') </script>";
-    echo "<script> window.location.href='viewallbooking.php';  </script>";
-  }else{
-    echo "<script> alert('Failed to delete booking!!') </script>";
-  }
-}
-?>

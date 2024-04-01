@@ -1,3 +1,7 @@
+// justtry1.6 viewallbooking.php with some changes n sucess 
+2try show no image found
+
+
 <?php 
 include('../connect.php');
 
@@ -58,7 +62,7 @@ if(!isset($_SESSION['uid'])){
           <th>Total Price</th>
           <th>Booking Date</th>
           <th>User</th>
-          
+          <th>Image</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -94,7 +98,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image_path'])): ?>
+                        <img src="../uploads/<?= $data['image_path'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
@@ -143,7 +153,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image_path'])): ?>
+                        <img src="../uploads/<?= $data['image_path'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){

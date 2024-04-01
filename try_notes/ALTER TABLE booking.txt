@@ -1,0 +1,7 @@
+ALTER TABLE booking
+ADD COLUMN id int(11) NOT NULL;
+
+
+// to ddelete 1 col
+ALTER TABLE booking
+DROP COLUMN column_name;

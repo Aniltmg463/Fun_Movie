@@ -1,3 +1,9 @@
+// justtry1.6 viewallbooking.php with some changes n sucess 
+first try 
+
+
+
+
 <?php 
 include('../connect.php');
 
@@ -58,7 +64,7 @@ if(!isset($_SESSION['uid'])){
           <th>Total Price</th>
           <th>Booking Date</th>
           <th>User</th>
-          
+          <th>Image</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -93,8 +99,7 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['total_price'] ?></td>
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
-                <!-- Display the image -->
-                
+                <td><?= $data['image_path'] ?></td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
@@ -142,8 +147,7 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['total_price'] ?></td>
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
-                <!-- Display the image -->
-                
+                <td><?= $data['image_path'] ?></td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){

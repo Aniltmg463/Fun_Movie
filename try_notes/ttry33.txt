@@ -1,3 +1,5 @@
+//ttry33
+
 <?php 
 include('../connect.php');
 
@@ -58,7 +60,7 @@ if(!isset($_SESSION['uid'])){
           <th>Total Price</th>
           <th>Booking Date</th>
           <th>User</th>
-          
+          <th>Image</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -71,11 +73,13 @@ if(!isset($_SESSION['uid'])){
   
           $total_sale = 0;
   
-          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.image_path, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
+          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, tb_upload.image, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
           FROM booking
           INNER JOIN users ON users.userid = booking.user_id
           INNER JOIN movies ON movies.movieid = booking.movie_id
           INNER JOIN categories ON categories.catid = movies.catid
+          INNER JOIN tb_upload ON tb_upload.id = booking.id
+
           WHERE booking.show_date BETWEEN '$start' AND '$end' AND booking.status = '$status'";
           $res  = mysqli_query($con, $sql);
           if(mysqli_num_rows($res) > 0){
@@ -94,7 +98,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image'])): ?>
+                        <img src="../img/<?= $data['image'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
@@ -123,11 +133,13 @@ if(!isset($_SESSION['uid'])){
             echo "<tr> <td>Total Sale: <strong> Rs.".$total_sale." </strong></td> </tr>";
           }
         }else{
-          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, booking.image_path, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
+          $sql = "SELECT booking.bookingid, booking.show_date, booking.show_time, booking.seat_num, tb_upload.image, booking.total_price, booking.booking_date, users.name as 'username', booking.status, movies.title, categories.catname
           FROM booking
           INNER JOIN users ON users.userid = booking.user_id
           INNER JOIN movies ON movies.movieid = booking.movie_id
-          INNER JOIN categories ON categories.catid = movies.catid";
+          INNER JOIN categories ON categories.catid = movies.catid
+          INNER JOIN tb_upload ON tb_upload.id = booking.id";
+          
           $res  = mysqli_query($con, $sql);
           if(mysqli_num_rows($res) > 0){
             while($data = mysqli_fetch_array($res)){
@@ -143,7 +155,13 @@ if(!isset($_SESSION['uid'])){
                 <td><?= $data['booking_date'] ?></td>
                 <td><?= $data['username'] ?></td>
                 <!-- Display the image -->
-                
+                <td>
+                    <?php if (!empty($data['image'])): ?>
+                        <img src="../img/<?= $data['image'] ?>" alt="Booking Image" style="max-width: 100px; max-height: 100px;">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
                 <td>
                   <?php
                   if($data['status'] == 'Pending'){
