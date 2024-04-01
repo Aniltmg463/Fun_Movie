@@ -1,0 +1,16 @@
+9806800004
+test@123
+
+success.php
+<php
+echo "<h1> payment success";
+$oid = $_GET['oid'];
+$amt = $_GET['amt'];
+$ref = $_GET['ref'];
+
+echo"<br>";
+echo "Order ID:".$oid."<br>";
+echo "Amount:".$oid."<br>";
+echo "Reference:".$oid."<br>";
+
+?>

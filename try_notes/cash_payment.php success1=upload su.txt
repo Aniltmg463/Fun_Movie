@@ -1,0 +1,100 @@
+//cash_payment.php success1=upload suucess hunx but not store in database in justtry1.5
+
+
+<?php
+// Include your database connection file (connect.php)
+include('connect.php');
+
+// Check if the user is not logged in
+if (!isset($_SESSION['email'])) {
+    // Redirect the user to the login page or display an error message
+    header('Location: login.php');
+    exit;
+}
+
+// Retrieve the user ID from the session
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+// Check if user_id is fetched successfully
+if (!$userId) {
+    // Handle the case where user_id is not found
+    echo "User ID not found.";
+    exit;
+}
+
+// Check if form is submitted
+if (isset($_POST['submit'])) {
+    // Check if there are uploaded files
+    if (isset($_FILES['images']) && is_array($_FILES['images']['tmp_name']) && count($_FILES['images']['tmp_name']) > 0) {
+        // Define upload directory
+        $uploadDir = 'uploads/';
+
+        // Start a transaction to ensure consistency in the database
+        $con->begin_transaction();
+
+        try {
+            // Iterate through each uploaded file
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+                // Generate a unique filename
+                $fileName = uniqid() . '_' . $_FILES['images']['name'][$key];
+
+                // Define the full path for the file
+                $targetPath = $uploadDir . $fileName;
+
+                // Move the uploaded file to the destination
+                if (move_uploaded_file($tmpName, $targetPath)) {
+                    // Update the 'image_path' column in the 'booking' table
+                    $imagePath = $fileName;
+                    $bookingDate = isset($_POST['booking_date']) ? $_POST['booking_date'] : ''; // Check if booking_date is set
+                    $bookingTime = isset($_POST['booking_time']) ? $_POST['booking_time'] : ''; // Check if booking_time is set
+
+                    $sql = "UPDATE booking SET image_path = ? WHERE user_id = ? AND booking_date = ? AND booking_time = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param('siss', $imagePath, $userId, $bookingDate, $bookingTime);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    echo "Image uploaded successfully!";
+                } else {
+                    echo "Image upload unsuccessful.";
+                }
+            }
+
+            // Commit the transaction if all insertions are successful
+            $con->commit();
+        } catch (Exception $e) {
+            // Rollback the transaction in case of any error during insertions
+            $con->rollback();
+            echo "Error: " . $e->getMessage();
+        }
+    } else {
+        echo "No images selected for upload.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Images</title>
+    <!--link rel="stylesheet" href="seats.css" -->
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Images</h1>
+
+        <form action="cash_payment.php" method="post" enctype="multipart/form-data">
+            <!-- Assuming you have a hidden input field for booking_date and booking_time -->
+            <input type="hidden" name="booking_date" value="<?php echo isset($_GET['booking_date']) ? $_GET['booking_date'] : ''; ?>">
+            <input type="hidden" name="booking_time" value="<?php echo isset($_GET['booking_time']) ? $_GET['booking_time'] : ''; ?>">
+
+            <label>Select Images:</label>
+            <input type="file" name="images[]" multiple accept="image/*">
+
+            <input type="submit" name="submit" value="Upload Images">
+        </form>
+
+        <a href="index.php">Back to Booking</a>
+    </div>
+</body>
+</html>

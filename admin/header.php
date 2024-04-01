@@ -36,7 +36,7 @@
           <li><a class="nav-link scrollto" href="categories.php">Categories</a></li>
           <li><a class="nav-link scrollto" href="movies.php">Movies</a></li>
           <li><a class="nav-link scrollto" href="theater.php">Theater</a></li>
-          <li><a class="nav-link scrollto" href="classes.php">Classes</a></li>
+          <li><a class="nav-link scrollto" href="classes.php">Images</a></li>
           <li><a class="nav-link scrollto" href="viewallusers.php">Users</a></li>
           <li><a class="nav-link scrollto" href="viewallbooking.php">Booking</a></li>
         
